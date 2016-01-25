@@ -1,6 +1,5 @@
 import Rx from 'rx'
-import combineLatestObj from 'rx-combine-latest-obj'
-import isPlainObject from 'lodash.isplainobject'
+import combineLatest from './combineLatest'
 
 /*
   ## EXAMPLE
@@ -38,12 +37,7 @@ import isPlainObject from 'lodash.isplainobject'
 export default (model, initialState) => {
   const actions$ = new Rx.Subject()
   const dispatch = actions$.onNext.bind(actions$)
-  const model$   = model(initialState, actions$, dispatch)
-  const state$   = (
-    isPlainObject(model$)
-      ? combineLatestObj(model$)
-      : model$
-  ).repeat(1)
+  const state$   = combineLatest(model(initialState, actions$, dispatch)).repeat(1)
 
   return {
     state$,

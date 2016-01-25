@@ -4,6 +4,7 @@ import curry from 'ramda/src/curry'
 import compose from 'recompose/compose'
 import getContext from 'recompose/getContext'
 import observeProps from 'rx-recompose/observeProps'
+import combineLatest from './combineLatest'
 
 /*
   ## EXAMPLE
@@ -17,6 +18,7 @@ import observeProps from 'rx-recompose/observeProps'
   ```
 )
 */
+
 export default curry((reducer, BaseComponent) => {
   return compose(
     getContext({
@@ -24,6 +26,7 @@ export default curry((reducer, BaseComponent) => {
     }),
     observeProps((props$) =>
       props$.flatMap(({store}) =>
-        reducer(store, props$.map(omit('store')))))
+        combineLatest(
+          reducer(store, props$.map(omit('store'))))))
   )(BaseComponent)
 })
