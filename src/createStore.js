@@ -9,7 +9,7 @@ import isPlainObject from 'lodash.isplainobject'
   const eq     = (x) => (y) => x === y
   const always = (x) => ( ) => x
 
-  const counter = curry((initialCount, actions$) => {
+  const counter = (initialCount, actions$) => {
     invariant(Number.isInteger(initialCount), "counter requires a numeric initialCount parameter")
   
     const increment$ = actions$.filter(eq('increment'))
@@ -21,9 +21,13 @@ import isPlainObject from 'lodash.isplainobject'
     )
       .scan((total, x) => total + x, initialCount)
       .startWith(initialCount)
-  })
+  }
 
-  const store = createStore(counter(0))
+  const store = createStore(({count}, actions$) => {
+    return {
+      count: counter(count, actions$)
+    }
+  }, { count: 0 })
 
   store.state$.subscribe(::console.log)
 
@@ -31,10 +35,10 @@ import isPlainObject from 'lodash.isplainobject'
   store.dispatch('decrement')
   ```
 */
-export default (model) => {
+export default (model, initialState) => {
   const actions$ = new Rx.Subject()
   const dispatch = actions$.onNext.bind(actions$)
-  const model$   = model(actions$, dispatch)
+  const model$   = model(initialState, actions$, dispatch)
   const state$   = (
     isPlainObject(model$)
       ? combineLatestObj(model$)

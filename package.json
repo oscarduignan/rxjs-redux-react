@@ -7,7 +7,7 @@
     "build": "babel src -d lib",
     "build:watch": "npm run build -- --watch",
     "test": "node --harmony --harmony_destructuring test.js",
-    "test:watch": "ls test.js lib/* | entr -r time -p npm run test",
+    "test:watch": "ls test.js lib/* | entr -c time -p npm run test",
     "prepublish": "npm run build"
   },
   "author": "Oscar Duignan",

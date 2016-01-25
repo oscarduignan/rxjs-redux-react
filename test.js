@@ -24,7 +24,7 @@ const counter = curry((initialCount, actions$) => {
 
 test('counter responds to increment and decrement', (assert) => {
   let initialCount = 0
-  const store = createStore(counter(initialCount))
+  const store = createStore(counter, initialCount)
 
   assert.plan(5)
   store.state$.subscribe((state) => {
@@ -58,10 +58,13 @@ global.window   = document.defaultView
 
 test('component gets props from store and rerenders when changed', (assert) => {
   let initialCount = 0
+  let initialState = {
+    count: initialCount
+  }
 
-  const store = createStore(actions$ => ({
-    count: counter(initialCount, actions$)
-  }))
+  const store = createStore(({count}, actions$) => ({
+    count: counter(count, actions$)
+  }), initialState)
 
   const spy = createSpy()
 
