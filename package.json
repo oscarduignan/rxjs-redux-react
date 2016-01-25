@@ -1,6 +1,6 @@
 {
   "name": "rxjs-redux-react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "redux style rxjs state management pattern for react apps",
   "main": "./lib",
   "scripts": {
